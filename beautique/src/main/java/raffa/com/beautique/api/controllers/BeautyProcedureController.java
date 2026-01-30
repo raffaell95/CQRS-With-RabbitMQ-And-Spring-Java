@@ -1,0 +1,32 @@
+package raffa.com.beautique.api.controllers;
+
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import raffa.com.beautique.api.dtos.BeautyProcedureDTO;
+import raffa.com.beautique.api.services.BeautyProcedureService;
+
+@RestController
+@RequestMapping("")
+public class BeautyProcedureController {
+
+    @Autowired
+    private BeautyProcedureService beautyProcedureService;
+
+    @PostMapping
+    ResponseEntity<BeautyProcedureDTO> create(@RequestBody BeautyProcedureDTO beautyProcedureDTO){
+        return ResponseEntity.ok(beautyProcedureService.create(beautyProcedureDTO));
+    }
+
+    @DeleteMapping("/{id}")
+    ResponseEntity<Void> delete(@PathVariable Long id){
+        beautyProcedureService.delete(id);
+        return ResponseEntity.ok().build();
+    }
+
+    @PatchMapping
+    ResponseEntity<BeautyProcedureDTO> update(@RequestBody BeautyProcedureDTO beautyProcedureDTO){
+        return ResponseEntity.ok(beautyProcedureService.update(beautyProcedureDTO));
+    }
+}

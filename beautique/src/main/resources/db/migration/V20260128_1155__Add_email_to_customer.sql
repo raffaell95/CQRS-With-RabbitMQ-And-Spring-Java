@@ -1,0 +1,1 @@
+ALTER TABLE beautique_schema.customer ADD COLUMN email VARCHAR(100) NOT NULL;
