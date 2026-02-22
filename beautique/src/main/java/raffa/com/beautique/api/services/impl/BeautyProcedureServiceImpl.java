@@ -6,6 +6,7 @@ import raffa.com.beautique.api.dtos.BeautyProcedureDTO;
 import raffa.com.beautique.api.entities.BeautyProceduresEntity;
 import raffa.com.beautique.api.repositories.BeautyProcedureRepository;
 import raffa.com.beautique.api.services.BeautyProcedureService;
+import raffa.com.beautique.api.services.BrockerService;
 import raffa.com.beautique.api.utils.ConverterUtil;
 
 import java.util.Optional;
@@ -16,6 +17,9 @@ public class BeautyProcedureServiceImpl implements BeautyProcedureService {
     @Autowired
     private BeautyProcedureRepository beautyProcedureRepository;
 
+    @Autowired
+    private BrockerService brockerService;
+
     private final ConverterUtil<BeautyProceduresEntity, BeautyProcedureDTO> converterUtil = new ConverterUtil<>(BeautyProceduresEntity.class, BeautyProcedureDTO.class);
 
     @Override
@@ -23,6 +27,7 @@ public class BeautyProcedureServiceImpl implements BeautyProcedureService {
 
         BeautyProceduresEntity beautyProceduresEntity = converterUtil.convertToSource(beautyProcedureDTO);
         BeautyProceduresEntity newBeautyProcedureEntity = beautyProcedureRepository.save(beautyProceduresEntity);
+        sendBeautyProceduresToQueue(newBeautyProcedureEntity);
         return converterUtil.convertToTarget(newBeautyProcedureEntity);
     }
 
@@ -45,6 +50,21 @@ public class BeautyProcedureServiceImpl implements BeautyProcedureService {
         beautyProceduresEntity.setAppointments(beautyProceduresEntityOptional.get().getAppointments());
         beautyProceduresEntity.setCreatedAt(beautyProceduresEntityOptional.get().getCreatedAt());
 
-        return converterUtil.convertToTarget(beautyProcedureRepository.save(beautyProceduresEntity));
+        BeautyProceduresEntity updatedBeautyProcedureEntity = beautyProcedureRepository.save(beautyProceduresEntity);
+
+        sendBeautyProceduresToQueue(updatedBeautyProcedureEntity);
+
+        return converterUtil.convertToTarget(updatedBeautyProcedureEntity);
+    }
+
+    private void sendBeautyProceduresToQueue(BeautyProceduresEntity beautyProceduresEntity){
+        BeautyProcedureDTO beautyProcedureDTO = BeautyProcedureDTO.builder()
+                .id(beautyProceduresEntity.getId())
+                .name(beautyProceduresEntity.getName())
+                .description(beautyProceduresEntity.getDescription())
+                .price(beautyProceduresEntity.getPrice())
+                .build();
+
+        brockerService.send("beautyProcedures", beautyProcedureDTO);
     }
 }

@@ -7,7 +7,7 @@ services:
       POSTGRES_USER: beautique
       POSTGRES_PASSWORD: beautique
     volumes:
-      - '/home/raffa/Documentos/db-beautique/db-beautique:/var/lib/postgresql/data'
+      - 'C:/Users/Rafael/Documents/db-beautique/db-beautique:/var/lib/postgresql/data'
       - ./init-beautique-schema.sql:/docker-entrypoint-initdb.d/init-beautique-schema.sql
     ports:
       - '3334:5432'
@@ -25,8 +25,21 @@ services:
     networks:
       - beautique-network
     volumes:
-      - '/home/raffa/Documentos/rabbitmq-data:/var/lib/rabbitmq'
-      - '/home/raffa/Documentos/rabbitmq-log:/var/lib/rabbitmq'
+      - 'C:/Users/Rafael/Documents/rabbitmq-data:/var/lib/rabbitmq'
+      - 'C:/Users/Rafael/Documents/rabbitmq-log:/var/lib/rabbitmq'
+  mongodb:
+    image: 'mongo:latest'
+    hostname: mongodb
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: mongoadmin
+      MONGO_INITDB_ROOT_PASSWORD: mongopassword
+    volumes:
+      - 'C:/Users/Rafael/Documents/db-mongo-db:/data/db'
+      - './mongo-init.sh:/docker-entrypoint-initdb.d/mongo-init.sh'
+    ports:
+      - '27017:27017'
+    networks:
+      - beautique-network
 
 networks:
   beautique-network:

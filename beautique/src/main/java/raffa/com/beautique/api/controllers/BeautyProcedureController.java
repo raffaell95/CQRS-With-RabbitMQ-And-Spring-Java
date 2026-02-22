@@ -8,7 +8,7 @@ import raffa.com.beautique.api.dtos.BeautyProcedureDTO;
 import raffa.com.beautique.api.services.BeautyProcedureService;
 
 @RestController
-@RequestMapping("")
+@RequestMapping("/beauty-procedures")
 public class BeautyProcedureController {
 
     @Autowired
