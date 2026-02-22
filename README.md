@@ -51,7 +51,7 @@ A comunicação entre os serviços ocorre via **RabbitMQ**, garantindo:
 ## Tecnologias e Stack
 
 ### Backend
-- Java 17
+- Java 25
 - Spring Boot
 - Spring Web
 - Spring Data MongoDB
@@ -65,4 +65,11 @@ A comunicação entre os serviços ocorre via **RabbitMQ**, garantindo:
 - Docker Compose
 
 ---
+
+## Como Executar os Containers
+
+### Pré-requisitos
+
+- Docker instalado
+- Docker Compose instalado
 
